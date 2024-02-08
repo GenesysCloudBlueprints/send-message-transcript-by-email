@@ -1,0 +1,60 @@
+inboundShortMessage:
+  name: {{inbound_message_flow_name}}
+  startUpRef: "/inboundShortMessage/states/state[Initial State_10]"
+  defaultLanguage: en-us
+  supportedLanguages:
+    en-us:
+      defaultLanguageSkill:
+        noValue: true
+  settingsErrorHandling:
+    errorHandling:
+      disconnect:
+        none: true
+  states:
+    - state:
+        name: Initial State
+        refId: Initial State_10
+        variables:
+          - stringVariable:
+              name: State.emailAddress
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.transcriptRequested
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+        actions:
+          - updateData:
+              name: Update Data
+              statements:
+                - string:
+                    variable: State.emailAddress
+                    value:
+                      lit: {{testTargetEmail}}
+                - string:
+                    variable: State.transcriptRequested
+                    value:
+                      lit: "true"
+          - setParticipantData:
+              name: Set Participant Data
+              attributes:
+                - attribute:
+                    name:
+                      lit: transcriptRequested
+                    value:
+                      exp: State.transcriptRequested
+                - attribute:
+                    name:
+                      lit: email
+                    value:
+                      exp: State.emailAddress
+          - sendResponse:
+              name: Send Response
+              messageBody:
+                exp: Append("Hi there. The transcript for this conversation will be emailed to ", State.emailAddress, " approximately 30 seconds after this conversation is terminated.")
+          - disconnect:
+              name: Disconnect

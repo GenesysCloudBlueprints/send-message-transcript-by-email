@@ -1,0 +1,156 @@
+---
+title: Send a Copy of a Message Transcript Via Email
+author: Dave Gussin
+indextype: blueprint
+icon: blueprint
+image: images/banner.png
+category: 7
+summary: |
+  This Genesys Cloud Developer Blueprint demonstrates how to configure Genesys Cloud to send a customer a copy of their message transcript to their email address on file.
+---
+:::{"alert":"primary","title":"About Genesys Cloud Blueprints","autoCollapse":false} 
+Genesys Cloud blueprints were built to help you jump-start building an application or integrating with a third-party partner. 
+Blueprints are meant to outline how to build and deploy your solutions, not a production-ready turn-key solution.
+ 
+For more details on Genesys Cloud blueprint support and practices 
+please see our Genesys Cloud blueprint [FAQ](https://developer.genesys.cloud/blueprints/faq)sheet.
+:::
+
+This Genesys Cloud Developer Blueprint demonstrates how to configure Genesys Cloud to send a customer a copy of their message transcript to their email address on file.
+
+![Send message transcript](images/overview.png "Send message transcript")
+
+## Scenario
+
+You want to provide a mechanism so your customers can elect to receive a copy of their message transcript by email. 
+
+This blueprint showcases how you can use native no-code/low-code features in Genesys Cloud to send a copy of the message transcript to your customers by email:
+* Configure an Architect Workflow that uses Data Actions to retrieve the email address for the corresponding customer, retrieve the transcript for the message conversation that just completed, and send the transcript to the customer by email.
+* Configure a Trigger to listen for the event generated when a message conversation finishes and execute the Workflow
+
+
+## Solution components
+
+* **Architect flows** - A flow in Architect, a drag and drop web-based design tool, dictates how Genesys Cloud handles inbound/outbound interactions and/or automated processes.
+* **Agentless/Campaign Email Domain** - An email domain for an outbound email campaign or to trigger an agentless email notification. The use of outbound emails requires that you have your own email domain or subdomain.
+* **Trigger** - A trigger is a resource within Genesys Cloud that allows customers to configure a reaction to a specific event that occurs within Genesys Cloud.
+* **Data Action** -  The data actions integrations allow you to gather data from external systems and/or Genesys Cloud itself, and then perform actions in Genesys Cloud applications like Architect Workflows.
+* **Web Messaging and Messenger** -  Web Messaging provides enhanced experience to your customers who visit your site to have asynchronous conversations with a bot or agent. Messenger provides a predefined message window and launcher button which customers use to interact with bots and agents. In this solution, a Messenger must be deployed to your website.
+* **CX as Code** - A Genesys Cloud Terraform provider that provides an interface for declaring core Genesys Cloud objects.
+
+## Prerequisites
+
+### Specialized knowledge
+
+* Administrator-level knowledge of Genesys Cloud
+* Experience with 3rd party email domain / DNS management
+* Familiarity with Terraform or similar Infrastructure as Code tools
+* Knowledge about adding scripts to HTML pages
+* Experience with Terraform
+
+### Genesys Cloud account
+
+* A Genesys Cloud license. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the Genesys Cloud pricing page") in the Genesys website.
+* The Master Admin role. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
+* CX as Code. For more information, see [CX as Code](https://developer.genesys.cloud/devapps/cx-as-code/ "Goes to the CX as Code page") in the Genesys Cloud Developer Center.
+
+### Development tools running in your local environment
+
+* Terraform (the latest binary). For more information, see [Download Terraform](https://www.terraform.io/downloads.html "Goes to the Download Terraform page") on the Terraform website.
+
+## Implementation steps using CX as Code
+
+### Download the repository containing the project files
+
+1. Clone the [send-message-transcript-by-email repository](https://github.com/GenesysCloudBlueprints/send-message-transcript-by-email "Opens the send-message-transcript-by-email repository in GitHub").
+
+### Set up Genesys Cloud
+
+1. To run this project using the Terraform provider, open a Terminal window and set the following environment variables:
+
+ * `GENESYSCLOUD_OAUTHCLIENT_ID` - This variable is the Genesys Cloud client credential grant Id that CX as Code executes against. 
+ * `GENESYSCLOUD_OAUTHCLIENT_SECRET` - This variable is the Genesys Cloud client credential secret that CX as Code executes against. 
+ * `GENESYSCLOUD_REGION` - This variable is the Genesys Cloud region in your organization.
+
+2. Run Terraform in the folder where you set the environment variables. 
+
+### Configure your Terraform build
+
+In the **blueprint/terraform/dev.auto.tfvars** file, set the following values, which are specific to your Genesys Cloud organization:
+
+* `client_id` - The value of your OAuth Client ID using Client Credentials to be used for the data action integration.
+* `client_secret`- The value of your OAuth Client secret using Client Credentials to be used for the data action integration.
+* `agentless_email_fromAddress` - Email addresses to use when sending the email to the customer.
+* `agentless_email_replyToAddress` - Email addresses to use when sending the email to the customer.
+* `initial_target_customer_email` - For testing purposes, set this value to thee email address to whom you want the copy of the message transcript to be sent. This value will be configured in the Inbound Message Flow that can be used to test this Blueprint.
+* `external_contact_first_name` - The first name for the external contact associated with the message conversation to which the transcript should be sent. (When the Message Flow has been executed at least once, subsequent invocations and outbound emails will correlate to this External Contact from a customer journey perspective.)
+* `external_contact_last_name` - The last name for the external contact associated with the message conversation to which the transcript should be sent. (When the Message Flow has been executed at least once, subsequent invocations and outbound emails will correlate to this External Contact from a customer journey perspective.)
+* `external_contact_personal_email` - The email address for the external contact associated with the message conversation to which the transcript should be sent. (When the Message Flow has been executed at least once, subsequent invocations and outbound emails will correlate to this External Contact from a customer journey perspective.)
+
+The following is an example of the dev.auto.tfvars file.
+
+```
+client_id                        = "your-client-id"
+client_secret                    = "your-client-secret"
+agentless_email_fromAddress      = "agentless-email-from-address@domain.com"
+agentless_email_replyToAddress   = "agentless-email-reply-to-address@domain.com"
+initial_target_customer_email    = "initial-target-customer-email@domain.com"
+external_contact_first_name      = "external-contact-first-name"
+external_contact_last_name       = "external-contact-last-name"
+external_contact_personal_email  = "external-contact-personal-email@domain.com"
+```
+
+### Run Terraform
+
+You are now ready to run this blueprint solution for your organization. 
+
+1. Change to the **/terraform** folder and issue these commands:
+
+* `terraform init` - This command initializes a working directory containing Terraform configuration files.
+  
+* `terraform plan` - This command executes a trial run against your Genesys Cloud organization and shows you a list of all the Genesys Cloud resources it creates. Review this list and make sure that you are comfortable with the plan before continuing to the second step.
+
+* `terraform apply --auto-approve` - This command creates and deploys the necessary objects in your Genesys Cloud account. The --auto-approve flag completes the required approval step before the command creates the objects.
+
+After the `terraform apply --auto-approve` command completes, you should see the output of the entire run along with the number of objects successfully created by Terraform. Keep these points in mind:
+
+*  This project assumes you are running using a local Terraform backing state, which means that the `tfstate` files are created in the same folder where you run the project. Terraform does not recommend using local Terraform backing state files unless you run from a desktop and are comfortable with the deleted files.
+
+* As long as you keep your local Terraform backing state projects, you can tear down this blueprint solution by changing to the `docs/terraform` folder and issuing a `terraform destroy --auto-approve` command. This command destroys all objects currently managed by the local Terraform backing state.
+
+## Implementation Steps using manual configuration
+
+### Download the repository containing the project files
+
+1. Clone the [send-message-transcript-by-email repository](https://github.com/GenesysCloudBlueprints/send-message-transcript-by-email "Opens the send-message-transcript-by-email repository in GitHub").
+
+### Configure a Campaign/Agentless Email Domain
+If you don’t already have a Campaign/Agentless domain configured in your Genesys Cloud Org, follow these steps. Otherwise, skip to the next section.
+1.	Click **Admin**.
+2.	Under **Contact Center**, click **Email**.
+3.	Click the **+ Add Domain** button.
+4.	For **Domain Type**, select *Campaign/Agentless*.
+5.	For **Domain Name**, type the name of your email domain. For example: *myemaildomain.com*.
+   ![Email Domain Configuration](images/1-email-domain.png "Email Domain Configuration")
+6.	Select the new email domain entry.
+7.	Copy the values for CNAME and TXT to your domain’s DNS settings to verify ownership of your domain. 
+8.	Once you’ve added these new records to your DNS service, click the **Activate** button.
+   ![Domain Settings](images/2-domain-settings.png "Domain Settings")
+9.	Your email server will need to be configured with an email address that you would like to use for sending emails to customers. Make note of this email address as it will be required when you configure the Terraform variable values.
+
+### Create an OAuth Client for the Genesys Cloud Data Actions Integration
+
+If you don’t already have an OAuth Client with a Client Credentials Grant configured in your Genesys Cloud Org, follow these steps. If you already have an OAuth client, make note of the Client ID (GUID) and skip to the next section. 
+1.	Click **Admin**.
+2.	Under **Integrations**, click **OAuth**.
+3.	Click the **Add Client** button.
+4.	Give your OAuth client a unique name and select the **Client Credentials** radio button.
+5.	Click the **Roles** tab and assign the *Master Admin* Role.
+   a.	Note: The Master Admin role is not a definitive requirement, but it is the easiest method to set up this Blueprint. The actual permissions required for this Blueprint are not in scope.
+6.	Click the **Save** button.
+7.	Make note of the Client ID (GUID) for your new OAuth client. You will need this GUID when you edit the Terraform variables configuration file.
+
+### Test the solution
+
+There are several ways to initiate a conversation to generate the detail events for this integration. The most straightforward is to follow the Web Chat Dev Tool Guide to use the Web Chat Dev Tool. 
+Select the deployment called **Message Deployment for Sending Copy of Transcript by Email**.
