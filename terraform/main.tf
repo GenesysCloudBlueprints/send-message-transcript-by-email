@@ -112,11 +112,11 @@ resource "genesyscloud_processautomation_trigger" "Send_Message_Transcript_to_Cu
 /*   
    Configures the external contact
 */
-# resource "genesyscloud_externalcontacts_contact" "contact" {
-#   first_name      = var.external_contact_first_name
-#   last_name       = var.external_contact_last_name
-#   personal_email  = var.external_contact_personal_email
-# }
+resource "genesyscloud_externalcontacts_contact" "contact" {
+  first_name      = var.external_contact_first_name
+  last_name       = var.external_contact_last_name
+  personal_email  = var.external_contact_personal_email
+}
 
 /*   
    Configures the web deployment configuration
