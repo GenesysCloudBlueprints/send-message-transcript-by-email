@@ -605,11 +605,11 @@ workflow:
                             ver_latestPublished:
                               inputs:
                                 Common.conversationId:
-                                  noValue: true
+                                  exp: Flow.conversationId
                                 Common.identifierType:
-                                  noValue: true
+                                  exp: Flow.identifier
                                 Common.identifierValue:
-                                  noValue: true
+                                  exp: Flow.identifierValue
                               outputs:
                                 Common.success:
                                   noValue: true
