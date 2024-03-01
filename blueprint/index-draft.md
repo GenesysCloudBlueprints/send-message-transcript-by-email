@@ -65,9 +65,9 @@ Clone the [send-message-transcript-by-email repository](https://github.com/Genes
 
 1. To run this project using the Terraform provider, open a terminal window and set the following environment variables:
 
- * `GENESYSCLOUD_OAUTHCLIENT_ID` - This variable is the Genesys Cloud client credential grant Id that CX as Code executes against. 
- * `GENESYSCLOUD_OAUTHCLIENT_SECRET` - This variable is the Genesys Cloud client credential secret that CX as Code executes against. 
- * `GENESYSCLOUD_REGION` - This variable is the Genesys Cloud region in your organization.
+ * `GENESYSCLOUD_OAUTHCLIENT_ID` - The Genesys Cloud client credential grant Id that CX as Code executes against. 
+ * `GENESYSCLOUD_OAUTHCLIENT_SECRET` - The Genesys Cloud client credential secret that CX as Code executes against. 
+ * `GENESYSCLOUD_REGION` - The Genesys Cloud region in your organization.
 
 2. Run Terraform in the folder where you set the environment variables. 
 
@@ -81,7 +81,7 @@ In the `blueprint/terraform/dev.auto.tfvars` file, set the following values, whi
 * `agentless_email_replyToAddress` - The email addresses to use when Genesys Cloud sends the email to the customer.
 * `initial_target_customer_email` - The email address that Genesys Cloud uses to receive a copy of the message transcript for testing purposes. Configure this value in the inbound message flow that you want to use to test this solution.
 * `external_contact_first_name` - The first name for the external contact associated with the message conversation to whom Genesys Cloud must send the transcript. After the initial execution of the message flow, Genesys Cloud associates the subsequent invocations and outbound emails with this external contact from a customer journey perspective.
-* `external_contact_last_name` - The family name for the external contact associated with the message conversation to whom Genesys Cloud must send the transcript. After the initial execution of the message flow, Genesys Cloud associates the subsequent invocations and outbound emails with this external contact from a customer journey perspective.
+* `external_contact_last_name` - The last name for the external contact associated with the message conversation to whom Genesys Cloud must send the transcript. After the initial execution of the message flow, Genesys Cloud associates the subsequent invocations and outbound emails with this external contact from a customer journey perspective.
 * `external_contact_personal_email` - The email address for the external contact associated with the message conversation to whom Genesys Cloud must send the transcript. After the initial execution of the message flow, Genesys Cloud associates the subsequent invocations and outbound emails with this external contact from a customer journey perspective.
 
 The following is an example of the `dev.auto.tfvars` file:
@@ -101,11 +101,11 @@ external_contact_personal_email  = "external-contact-personal-email@domain.com"
 
 To run this blueprint solution in your organization, change to the `/terraform` folder and issue the following commands:
 
- * `terraform init` - This command initializes a working directory that contains the Terraform configuration files.
+ * `terraform init` - Initializes a working directory that contains the Terraform configuration files.
    
- * `terraform plan` - This command executes a trial run against your Genesys Cloud organization and shows you a list of all the Genesys Cloud resources it creates. Review this list and make sure that you agree with the plan before you continue to the next step.
+ * `terraform plan` - Executes a trial run against your Genesys Cloud organization and shows you a list of all the Genesys Cloud resources it creates. Review this list and make sure that you agree with the plan before you continue to the next step.
  
- * `terraform apply --auto-approve` - This command creates and deploys the necessary objects in your Genesys Cloud account. The `--auto-approve` flag completes the required approval step before the command creates the objects. After the command successfully completes, you see the output of the entire run along with the number of objects that Terraform successfully created.
+ * `terraform apply --auto-approve` - Creates and deploys the necessary objects in your Genesys Cloud account. The `--auto-approve` flag completes the required approval step before the command creates the objects. After the command successfully completes, you see the output of the entire run along with the number of objects that Terraform successfully created.
 
  Keep the following points in mind:
  
