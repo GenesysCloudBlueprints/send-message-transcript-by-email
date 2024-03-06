@@ -71,6 +71,41 @@ Clone the [send-message-transcript-by-email repository](https://github.com/Genes
 
 2. Run Terraform in the folder where you set the environment variables. 
 
+### Configure a Campaign/Agentless email domain
+
+If you have not previously configured a Campaign/Agentless domain in your Genesys Cloud organization, follow these steps:
+
+1.	Click **Admin**.
+2.	Under **Contact Center**, click **Email**.
+3.	Click **+ Add Domain**.
+4.	For **Domain Type**, select **Campaign/Agentless**.
+5.	For **Domain Name**, enter the name of your email domain. For example, "myemaildomain.com".
+   ![Email domain configuration](images/1-email-domain.png "Email domain configuration")
+   Click **Save**.
+6.	Select the new email domain entry.
+7.	Copy the values for CNAME and TXT to your domain’s DNS settings to verify the ownership of your domain. 
+8.	After you have added these new records to your DNS service, click **Activate**.
+   ![Domain settings](images/2-domain-settings.png "Domain settings")
+9.	Your email server must be configured with an email address that you can use for sending emails to customers. Make a note of this email address as it is required for configuring the Terraform variable values.
+
+### Create an OAuth Client for the Genesys Cloud Data Actions Integration
+
+If you have not previouly configured an OAuth Client with a Client Credentials Grant in your Genesys Cloud organization, follow these steps: 
+
+:::primary
+**Note**
+If you already have an OAuth client, make a note of the Client ID (GUID) and skip to the next section.
+:::
+
+1.	Click **Admin**.
+2.	Under **Integrations**, click **OAuth**.
+3.	Click **Add Client**.
+4.	Give your OAuth client a unique name and select the **Client Credentials**.
+5.	Click the **Roles** tab and assign the **Master Admin** role.
+   **Note**: The Master Admin role is not a definitive requirement, but it is the easiest method to set up this blueprint solution. The actual permissions required for this blueprint solution are not in scope.
+6.	Click **Save**.
+7.	Make a note of the Client ID (GUID) for your new OAuth client. You need this GUID when you edit the Terraform variables configuration file.
+
 ### Configure your Terraform build
 
 In the `blueprint/terraform/dev.auto.tfvars` file, set the following values, which are specific to your Genesys Cloud organization:
@@ -112,47 +147,6 @@ To run this blueprint solution in your organization, change to the `/terraform` 
  * The local state file in Terraform is named `terraform.tfstate`. The file is created and stored in the same folder as the project. Terraform recommends that you store the state file on a remote machine unless you want to run Terraform locally and are comfortable with the file deletion.
 
  * Use the `terraform destroy --auto-approve` command from the `docs/terraform` directory to clean up and remove all the objects that the local Terraform state file manages. Be sure that you have backed up your projects before you delete them.
-
-## Implementation steps using manual configuration
-
-### Download the repository that contains the project files
-
-Clone the [send-message-transcript-by-email repository](https://github.com/GenesysCloudBlueprints/send-message-transcript-by-email "Opens the send-message-transcript-by-email repository") in GitHub.
-
-### Configure a Campaign/Agentless email domain
-
-If you have not previously configured a Campaign/Agentless domain in your Genesys Cloud organization, follow these steps:
-
-1.	Click **Admin**.
-2.	Under **Contact Center**, click **Email**.
-3.	Click **+ Add Domain**.
-4.	For **Domain Type**, select **Campaign/Agentless**.
-5.	For **Domain Name**, enter the name of your email domain. For example, "myemaildomain.com".
-   ![Email domain configuration](images/1-email-domain.png "Email domain configuration")
-   Click **Save**.
-6.	Select the new email domain entry.
-7.	Copy the values for CNAME and TXT to your domain’s DNS settings to verify the ownership of your domain. 
-8.	After you have added these new records to your DNS service, click **Activate**.
-   ![Domain settings](images/2-domain-settings.png "Domain settings")
-9.	Your email server must be configured with an email address that you can use for sending emails to customers. Make a note of this email address as it is required for configuring the Terraform variable values.
-
-### Create an OAuth Client for the Genesys Cloud Data Actions Integration
-
-If you have not previouly configured an OAuth Client with a Client Credentials Grant in your Genesys Cloud organization, follow these steps: 
-
-:::primary
-**Note**
-If you already have an OAuth client, make a note of the Client ID (GUID) and skip to the next section.
-:::
-
-1.	Click **Admin**.
-2.	Under **Integrations**, click **OAuth**.
-3.	Click **Add Client**.
-4.	Give your OAuth client a unique name and select the **Client Credentials**.
-5.	Click the **Roles** tab and assign the **Master Admin** role.
-   **Note**: The Master Admin role is not a definitive requirement, but it is the easiest method to set up this blueprint solution. The actual permissions required for this blueprint solution are not in scope.
-6.	Click **Save**.
-7.	Make a note of the Client ID (GUID) for your new OAuth client. You need this GUID when you edit the Terraform variables configuration file.
 
 ### Test the solution
 
