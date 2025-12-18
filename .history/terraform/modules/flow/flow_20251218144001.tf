@@ -1,5 +1,6 @@
 resource "genesyscloud_flow" "Send_Message_Transcript_to_Customer_by_Email" {
   filepath          = "${path.module}/send-message-transcript-to-customer-by-email.yaml"
+  file_content_hash = filesha256("${path.module}/send-message-transcript-to-customer-by-email.yaml")
   substitutions = {
     workflow_name           = var.workflow_name
     fromAddress_email       = var.fromAddress_email
@@ -14,6 +15,7 @@ resource "genesyscloud_flow" "Send_Message_Transcript_to_Customer_by_Email" {
 
 resource "genesyscloud_flow" "Resolve_Contact" {
   filepath          = "${path.module}/resolve-contact.yaml"
+  file_content_hash = filesha256("${path.module}/resolve-contact.yaml")
   substitutions = {
     common_module_name      = var.common_module_name
     data_action_category    = var.data_action_category
@@ -25,6 +27,7 @@ resource "genesyscloud_flow" "Resolve_Contact" {
 
 resource "genesyscloud_flow" "Message_Conversation_with_Transcript_Sent_by_Email" {
   filepath          = "${path.module}/message-conv-with-transcript.yaml"
+  file_content_hash = filesha256("${path.module}/message-conv-with-transcript.yaml")
   substitutions = {
     inbound_message_flow_name = var.inbound_message_flow_name
     testTargetEmail           = var.initial_target_customer_email

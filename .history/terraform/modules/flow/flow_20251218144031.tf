@@ -25,6 +25,7 @@ resource "genesyscloud_flow" "Resolve_Contact" {
 
 resource "genesyscloud_flow" "Message_Conversation_with_Transcript_Sent_by_Email" {
   filepath          = "${path.module}/message-conv-with-transcript.yaml"
+  file_content_hash = filesha256("${path.module}/message-conv-with-transcript.yaml")
   substitutions = {
     inbound_message_flow_name = var.inbound_message_flow_name
     testTargetEmail           = var.initial_target_customer_email
